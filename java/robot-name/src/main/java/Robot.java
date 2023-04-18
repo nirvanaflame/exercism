@@ -15,15 +15,13 @@ public class Robot {
     }
 
     public void reset() {
+        mem.remove(this.name);
         this.name = generateUniqueName();
     }
 
 
-    private static String generateUniqueName() {
-        String name = generateName();
-        if (mem.contains(name)) {
-            generateUniqueName();
-        }
+    private String generateUniqueName() {
+        while (mem.contains(name = generateName())) {}
 
         mem.add(name);
         return name;
