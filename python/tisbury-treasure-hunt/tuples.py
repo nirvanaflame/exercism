@@ -27,7 +27,7 @@ def compare_records(azara_record, rui_record):
     :param rui_record: tuple - a (location, tuple(coordinate_1, coordinate_2), quadrant) trio.
     :return: bool - do the coordinates match?
     """
-    return str(azara_record[1]) == ''.join(rui_record[1])
+    return tuple(azara_record[1]) == rui_record[1]
 
 
 def create_record(azara_record, rui_record):
@@ -51,16 +51,4 @@ def clean_up(combined_record_group):
 
     (see HINTS.md for an example).
     """
-    sb = ""
-    for tup in combined_record_group:
-        sb += '('
-        for i, x in enumerate(tup):
-            if i != 1:
-                if isinstance(x, tuple):
-                    sb += str(x)
-                else:
-                    sb += f"'{x}'"
-            if i not in (1, len(tup) - 1):
-                sb += ', '
-        sb += ')\n'
-    return sb
+    return ''.join(f"{(record[0], record[2], record[3], record[4])}\n" for record in combined_record_group)
