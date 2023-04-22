@@ -7,7 +7,7 @@ def round_scores(student_scores):
     :param student_scores: list - float or int of student exam scores.
     :return: list - student scores *rounded* to nearest integer value.
     """
-    return [int(x) for x in student_scores]
+    return [round(x) for x in student_scores]
 
 
 def count_failed_students(student_scores):
@@ -42,16 +42,8 @@ def letter_grades(highest):
             71 <= "B" <= 85
             86 <= "A" <= 100
     """
-    res = []
-    if highest >= 86:
-        res.insert(0, 86)
-    if highest >= 71:
-        res.insert(0, 71)
-    if highest >= 56:
-        res.insert(0, 56)
-    if highest >= 41:
-        res.insert(0, 541)
-    return res
+    step = int((highest - 40) / 4)
+    return [x for x in range(41, highest, step)]
 
 
 def student_ranking(student_scores, student_names):
@@ -61,8 +53,7 @@ def student_ranking(student_scores, student_names):
     :param student_names: list - of string names by exam score in descending order.
     :return: list - of strings in format ["<rank>. <student name>: <score>"].
     """
-
-    pass
+    return [f'{rank}. {name}: {score}' for rank, (name, score) in enumerate(zip(student_names, student_scores), 1)]
 
 
 def perfect_score(student_info):
@@ -71,5 +62,5 @@ def perfect_score(student_info):
     :param student_info: list - of [<student name>, <score>] lists.
     :return: list - first `[<student name>, 100]` or `[]` if no student score of 100 is found.
     """
-
-    pass
+    perfect_scores = [[name, score] for (name, score) in student_info if score == 100]
+    return perfect_scores[0] if perfect_scores else []
