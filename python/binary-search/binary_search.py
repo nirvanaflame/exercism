@@ -3,7 +3,7 @@ def find(search_list, value):
     right = len(search_list) - 1
 
     while left <= right:
-        mid = int((left + right)/2)
+        mid = left + (right - left) // 2
         if search_list[mid] == value:
             return mid
         elif search_list[mid] < value:
