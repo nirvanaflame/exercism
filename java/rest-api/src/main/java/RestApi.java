@@ -5,52 +5,10 @@ import java.util.*;
 
 class RestApi {
 
-    List<User> repository;
+    private final UserRepository repository;
 
     public RestApi(User... users) {
-        this.repository = new ArrayList<>(List.of(users));
-    }
-
-    private Optional<User> findUser(String name) {
-        return repository.stream().filter(u -> u.name().equals(name)).findFirst();
-    }
-
-    private void saveAll(User... users) {
-        for (User user : users) {
-            saveUser(user);
-        }
-    }
-
-    private void saveUser(User toSave) {
-        Optional<User> optionalUser = findUser(toSave.name());
-        optionalUser.ifPresentOrElse(
-                saved -> mergeUser(saved, toSave),
-                () -> repository.add(toSave)
-        );
-    }
-
-    private void mergeUser(User saved, User toSave) {
-        List<Iou> owes = mergeList(saved.owes(), toSave.owes());
-        List<Iou> owedBy = mergeList(saved.owedBy(), toSave.owedBy());
-
-        User.Builder builder = User.builder().setName(toSave.name());
-        owes.forEach(x -> builder.owes(x.name, x.amount));
-        owedBy.forEach(x -> builder.owedBy(x.name, x.amount));
-        User user = builder.build();
-
-        repository.add(user);
-        repository.remove(saved);
-    }
-
-    private List<Iou> mergeList(List<Iou> list1, List<Iou> list2) {
-        ArrayList<Iou> result = new ArrayList<>();
-
-        result.addAll(list1);
-        result.addAll(list2);
-
-        return result.stream()
-                .sorted(Comparator.comparing(Iou::getName))
-                .toList();
+        this.repository = new UserRepository(users);
     }
 
     public String get(String url) {
@@ -64,7 +22,7 @@ class RestApi {
         if (url.equals("/users")) {
             JSONArray array = payload.getJSONArray("users");
             String name = array.getString(0);
-            User user = findUser(name).orElse(null);
+            User user = repository.findUser(name).orElse(null);
             return marshal(user);
         }
         return "";
@@ -73,7 +31,7 @@ class RestApi {
     public String post(String url, JSONObject payload) {
         if (url.equals("/add")) {
             User user = unmarshallUser(payload);
-            repository.add(user);
+            repository.saveUser(user);
             return marshalUser(user).toString();
         } else if (url.equals("/iou")) {
             String lenderName = payload.getString("lender");
@@ -81,9 +39,9 @@ class RestApi {
             double amount = payload.getDouble("amount");
             User lender = new User.Builder().setName(lenderName).owedBy(borrowerName, amount).build();
             User borrower = new User.Builder().setName(borrowerName).owes(lenderName, amount).build();
-            saveAll(lender, borrower);
-            lender = findUser(lender.name()).get();
-            borrower = findUser(borrower.name()).get();
+            repository.saveAll(lender, borrower);
+            lender = repository.findUser(lender.name()).get();
+            borrower = repository.findUser(borrower.name()).get();
             return marshal(lender, borrower);
         }
         return "";
@@ -148,5 +106,56 @@ class RestApi {
 
     private static Double getTotalBalance(List<Iou> owes) {
         return owes.stream().map(Iou::getAmount).reduce(Double::sum).orElse(0.0);
+    }
+
+    static class UserRepository {
+
+        private final List<User> repository;
+
+        UserRepository(User... users) {
+            this.repository = new ArrayList<>(List.of(users));
+        }
+
+        private Optional<User> findUser(String name) {
+            return repository.stream().filter(u -> u.name().equals(name)).findFirst();
+        }
+
+        private void saveAll(User... users) {
+            for (User user : users) {
+                saveUser(user);
+            }
+        }
+
+        private void saveUser(User toSave) {
+            Optional<User> optionalUser = findUser(toSave.name());
+            optionalUser.ifPresentOrElse(
+                    saved -> mergeUser(saved, toSave),
+                    () -> repository.add(toSave)
+            );
+        }
+
+        private void mergeUser(User saved, User toSave) {
+            List<Iou> owes = mergeList(saved.owes(), toSave.owes());
+            List<Iou> owedBy = mergeList(saved.owedBy(), toSave.owedBy());
+
+            User.Builder builder = User.builder().setName(toSave.name());
+            owes.forEach(x -> builder.owes(x.name, x.amount));
+            owedBy.forEach(x -> builder.owedBy(x.name, x.amount));
+            User user = builder.build();
+
+            repository.add(user);
+            repository.remove(saved);
+        }
+
+        private List<Iou> mergeList(List<Iou> list1, List<Iou> list2) {
+            ArrayList<Iou> result = new ArrayList<>();
+
+            result.addAll(list1);
+            result.addAll(list2);
+
+            return result.stream()
+                    .sorted(Comparator.comparing(Iou::getName))
+                    .toList();
+        }
     }
 }
