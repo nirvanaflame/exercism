@@ -6,5 +6,4 @@ class ArmstrongNumbers {
         int poweredDigs = num.chars().map(x -> (int) Math.pow(Character.digit(x, 10), len)).sum();
         return numberToCheck == poweredDigs;
     }
-
 }
