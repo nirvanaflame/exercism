@@ -1,10 +1,7 @@
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 class RestApi {
 
@@ -132,20 +129,14 @@ class RestApi {
         if (owned.size() == 0) {
             object.put(property, new JSONObject());
         } else  {
-            object.put(property, putOwns(owned.toArray(Iou[]::new)));
+            object.put(property, putOwns(owned));
         }
     }
 
-    private static JSONArray putOwns(Iou... owned) {
-        JSONArray array = new JSONArray();
-        for (Iou iou : owned) {
-            array.put(putOwn(iou));
-        }
-        return array;
-    }
-
-    private static JSONObject putOwn(Iou o) {
-        return new JSONObject().put(o.name, o.amount);
+    private static HashMap<String, Double> putOwns(List<Iou> owned) {
+        HashMap<String, Double> own = new HashMap<>();
+        owned.forEach(x -> own.put(x.name, x.amount));
+        return own;
     }
 
     private static double calcBalance(User user) {
