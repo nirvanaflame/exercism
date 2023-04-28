@@ -3,7 +3,7 @@ import org.json.JSONObject;
 
 import java.util.*;
 
-class RestApi {
+public class RestApi {
 
     private final UserRepository repository;
 
@@ -22,7 +22,7 @@ class RestApi {
         if (url.equals("/users")) {
             JSONArray array = payload.getJSONArray("users");
             String name = array.getString(0);
-            User user = repository.findUser(name).orElse(null);
+            MyUser user = repository.findUser(name).orElse(null);
             return marshal(user);
         }
         return "";
@@ -30,7 +30,7 @@ class RestApi {
 
     public String post(String url, JSONObject payload) {
         if (url.equals("/add")) {
-            User user = unmarshallUser(payload);
+            MyUser user = unmarshallUser(payload);
             repository.saveUser(user);
             return marshalUser(user).toString();
         } else if (url.equals("/iou")) {
@@ -39,14 +39,14 @@ class RestApi {
         return "";
     }
 
-    private static User unmarshallUser(JSONObject payload) {
+    private static MyUser unmarshallUser(JSONObject payload) {
         String userName = payload.getString("user");
-        return new User.Builder().setName(userName).build();
+        return new MyUser.Builder().setName(userName).build();
     }
 
-    private static String marshal(User... users) {
+    private static String marshal(MyUser... users) {
         JSONArray array = new JSONArray();
-        List<User> userList = Arrays.stream(users).sorted(Comparator.comparing(User::name)).toList();
+        List<MyUser> userList = Arrays.stream(users).sorted(Comparator.comparing(MyUser::name)).toList();
         userList.forEach(x -> {
             array.put(marshalUser(x));
         });
@@ -54,13 +54,13 @@ class RestApi {
         return new JSONObject().put("users", array).toString();
     }
 
-    private static JSONObject marshalUser(User user) {
+    private static JSONObject marshalUser(MyUser user) {
         JSONObject object = new JSONObject().put("name", user.name()).put("balance", calcBalance(user));
         putJsonArray(object, user);
         return object;
     }
 
-    private static void putJsonArray(JSONObject object, User user) {
+    private static void putJsonArray(JSONObject object, MyUser user) {
         putJsonArray("owes", user.owes(), object);
         putJsonArray("owedBy", user.owedBy(), object);
     }
@@ -79,7 +79,7 @@ class RestApi {
         return own;
     }
 
-    private static double calcBalance(User user) {
+    private static double calcBalance(MyUser user) {
         double lender = getTotalBalance(user.owes());
         double borrower = getTotalBalance(user.owedBy());
 
@@ -87,7 +87,7 @@ class RestApi {
     }
 
     private static Double getTotalBalance(List<Iou> owes) {
-        return owes.stream().map(Iou::getAmount).reduce(Double::sum).orElse(0.0);
+        return owes.stream().map(iou -> iou.amount).reduce(Double::sum).orElse(0.0);
     }
 
     private String charge(JSONObject payload) {
@@ -96,7 +96,7 @@ class RestApi {
         double amount = payload.getDouble("amount");
 
 
-        User lender = repository.findUser(lenderName).get();
+        MyUser lender = repository.findUser(lenderName).get();
         Optional<Iou> owe = lender.findOwe(borrowerName);
         owe.ifPresentOrElse(x -> {
             var money = x.amount - amount;
@@ -115,7 +115,7 @@ class RestApi {
             lender.addOwed(iou1);
         });
 
-        User borrower = repository.findUser(borrowerName).get();
+        MyUser borrower = repository.findUser(borrowerName).get();
         Optional<Iou> owed = borrower.findOwed(lenderName);
         owed.ifPresentOrElse(x -> {
             var money = x.amount - amount;
@@ -136,32 +136,37 @@ class RestApi {
 
     static class UserRepository {
 
-        private final List<User> repository;
+        private final List<MyUser> repository;
 
         UserRepository(User... users) {
-            this.repository = new ArrayList<>(List.of(users));
+            ArrayList<MyUser> myUsers = new ArrayList<>();
+            for (User user : users) {
+                MyUser myUser = new MyUser(user.name(), user.owes(), user.owedBy());
+                myUsers.add(myUser);
+            }
+            this.repository = myUsers;
         }
 
-        private Optional<User> findUser(String name) {
+        private Optional<MyUser> findUser(String name) {
             return repository.stream().filter(u -> u.name().equals(name)).findFirst();
         }
 
-        private void saveUser(User toSave) {
-            Optional<User> optionalUser = findUser(toSave.name());
+        private void saveUser(MyUser toSave) {
+            Optional<MyUser> optionalUser = findUser(toSave.name());
             optionalUser.ifPresentOrElse(
                     saved -> mergeUser(saved, toSave),
                     () -> repository.add(toSave)
             );
         }
 
-        private void mergeUser(User saved, User toSave) {
+        private void mergeUser(MyUser saved, MyUser toSave) {
             List<Iou> owes = mergeList(saved.owes(), toSave.owes());
             List<Iou> owedBy = mergeList(saved.owedBy(), toSave.owedBy());
 
-            User.Builder builder = User.builder().setName(toSave.name());
+            MyUser.Builder builder = MyUser.builder().setName(toSave.name());
             owes.forEach(x -> builder.owes(x.name, x.amount));
             owedBy.forEach(x -> builder.owedBy(x.name, x.amount));
-            User user = builder.build();
+            MyUser user = builder.build();
 
             repository.add(user);
             repository.remove(saved);
@@ -173,9 +178,101 @@ class RestApi {
             result.addAll(list1);
             result.addAll(list2);
 
-            return result.stream()
-                    .sorted(Comparator.comparing(Iou::getName))
-                    .toList();
+            return result;
+        }
+    }
+
+    static class MyUser {
+        private final String name;
+        private final List<Iou> owes;
+        private final List<Iou> owedBy;
+
+        private MyUser(String name, List<Iou> owes, List<Iou> owedBy) {
+            this.name = name;
+            this.owes = new ArrayList<>(owes);
+            this.owedBy = new ArrayList<>(owedBy);
+        }
+
+        public String name() {
+            return name;
+        }
+
+        /**
+         * IOUs this user owes to other users.
+         */
+        public List<Iou> owes() {
+            return owes;
+        }
+
+        /**
+         * IOUs other users owe to this user.
+         */
+        public List<Iou> owedBy() {
+            return owedBy;
+        }
+
+        public Optional<Iou> findOwe(String name) {
+            return owes.stream().filter(x -> x.name.equals(name)).findFirst();
+        }
+
+        public void replaceOwe(Iou oldIou, Iou newIou) {
+            owes.remove(oldIou);
+            if (newIou != null) owes.add(newIou);
+        }
+
+        public void addOwe(Iou iou) {
+            owes.add(iou);
+        }
+
+        public void addOwed(Iou iou) {
+            owedBy.add(iou);
+        }
+
+        public Optional<Iou> findOwed(String name) {
+            return owedBy.stream().filter(x -> x.name.equals(name)).findFirst();
+        }
+
+        public void replaceOwed(Iou name, Iou newIou) {
+            owedBy.remove(name);
+            if (newIou != null) owedBy.add(newIou);
+        }
+
+        @Override
+        public String toString() {
+            return "User{" +
+                    "name='" + name + '\'' +
+                    ", owes=" + owes +
+                    ", owedBy=" + owedBy +
+                    '}';
+        }
+
+        public static Builder builder() {
+            return new Builder();
+        }
+
+        public static class Builder {
+            private String name;
+            private final List<Iou> owes = new ArrayList<>();
+            private final List<Iou> owedBy = new ArrayList<>();
+
+            public Builder setName(String name) {
+                this.name = name;
+                return this;
+            }
+
+            public Builder owes(String name, double amount) {
+                owes.add(new Iou(name, amount));
+                return this;
+            }
+
+            public Builder owedBy(String name, double amount) {
+                owedBy.add(new Iou(name, amount));
+                return this;
+            }
+
+            public MyUser build() {
+                return new MyUser(name, owes, owedBy);
+            }
         }
     }
 }

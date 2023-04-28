@@ -1,10 +1,9 @@
+import static java.util.Collections.unmodifiableList;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
-/**
- * POJO representing a User in the database.
- */
+/** POJO representing a User in the database. */
 public class User {
     private final String name;
     private final List<Iou> owes;
@@ -20,52 +19,14 @@ public class User {
         return name;
     }
 
-    /**
-     * IOUs this user owes to other users.
-     */
+    /** IOUs this user owes to other users. */
     public List<Iou> owes() {
-        return owes;
+        return unmodifiableList(owes);
     }
 
-    /**
-     * IOUs other users owe to this user.
-     */
+    /** IOUs other users owe to this user. */
     public List<Iou> owedBy() {
-        return owedBy;
-    }
-
-    public Optional<Iou> findOwe(String name) {
-        return owes.stream().filter(x -> x.name.equals(name)).findFirst();
-    }
-
-    public void replaceOwe(Iou oldIou, Iou newIou) {
-        owes.remove(oldIou);
-        if (newIou != null) owes.add(newIou);
-    }
-
-    public void addOwe(Iou iou) {
-        owes.add(iou);
-    }
-
-    public void addOwed(Iou iou) {
-        owedBy.add(iou);
-    }
-
-    public Optional<Iou> findOwed(String name) {
-        return owedBy.stream().filter(x -> x.name.equals(name)).findFirst();
-    }
-    public void replaceOwed(Iou name, Iou newIou) {
-        owedBy.remove(name);
-        if (newIou != null) owedBy.add(newIou);
-    }
-
-    @Override
-    public String toString() {
-        return "User{" +
-                "name='" + name + '\'' +
-                ", owes=" + owes +
-                ", owedBy=" + owedBy +
-                '}';
+        return unmodifiableList(owedBy);
     }
 
     public static Builder builder() {
