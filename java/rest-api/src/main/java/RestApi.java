@@ -34,24 +34,22 @@ class RestApi {
             repository.saveUser(user);
             return marshalUser(user).toString();
         } else if (url.equals("/iou")) {
-            String lenderName = payload.getString("lender");
-            String borrowerName = payload.getString("borrower");
-            double amount = payload.getDouble("amount");
-            User lender = new User.Builder().setName(lenderName).owedBy(borrowerName, amount).build();
-            User borrower = new User.Builder().setName(borrowerName).owes(lenderName, amount).build();
-            repository.saveAll(lender, borrower);
-            lender = repository.findUser(lender.name()).get();
-            borrower = repository.findUser(borrower.name()).get();
-            return marshal(lender, borrower);
+            return charge(payload);
         }
         return "";
     }
 
+    private static User unmarshallUser(JSONObject payload) {
+        String userName = payload.getString("user");
+        return new User.Builder().setName(userName).build();
+    }
+
     private static String marshal(User... users) {
         JSONArray array = new JSONArray();
-        for (User user : users) {
-            array.put(marshalUser(user));
-        }
+        List<User> userList = Arrays.stream(users).sorted(Comparator.comparing(User::name)).toList();
+        userList.forEach(x -> {
+            array.put(marshalUser(x));
+        });
 
         return new JSONObject().put("users", array).toString();
     }
@@ -60,22 +58,6 @@ class RestApi {
         JSONObject object = new JSONObject().put("name", user.name()).put("balance", calcBalance(user));
         putJsonArray(object, user);
         return object;
-    }
-
-    private static List<User> unmarshallUsers(JSONObject payload) {
-        JSONArray array = payload.getJSONArray("users");
-        ArrayList<User> users = new ArrayList<>();
-        for (Object object : array) {
-            JSONObject o = (JSONObject) object;
-            User user = unmarshallUser(o);
-            users.add(user);
-        }
-        return users;
-    }
-
-    private static User unmarshallUser(JSONObject payload) {
-        String userName = payload.getString("user");
-        return new User.Builder().setName(userName).build();
     }
 
     private static void putJsonArray(JSONObject object, User user) {
@@ -108,6 +90,50 @@ class RestApi {
         return owes.stream().map(Iou::getAmount).reduce(Double::sum).orElse(0.0);
     }
 
+    private String charge(JSONObject payload) {
+        String lenderName = payload.getString("lender");
+        String borrowerName = payload.getString("borrower");
+        double amount = payload.getDouble("amount");
+
+
+        User lender = repository.findUser(lenderName).get();
+        Optional<Iou> owe = lender.findOwe(borrowerName);
+        owe.ifPresentOrElse(x -> {
+            var money = x.amount - amount;
+            if (money == 0) {
+                lender.replaceOwe(x, null);
+            } else if (money > 0) {
+                Iou newIou = new Iou(x.name, money);
+                lender.replaceOwe(x, newIou);
+            } else  {
+                lender.replaceOwe(x, null);
+                Iou iou = new Iou(x.name, -money);
+                lender.addOwed(iou);
+            }
+        }, () -> {
+            Iou iou1 = new Iou(borrowerName, amount);
+            lender.addOwed(iou1);
+        });
+
+        User borrower = repository.findUser(borrowerName).get();
+        Optional<Iou> owed = borrower.findOwed(lenderName);
+        owed.ifPresentOrElse(x -> {
+            var money = x.amount - amount;
+            if (money == 0) {
+                borrower.replaceOwed(x, null);
+            } else if (money > 0) {
+                Iou iou = new Iou(x.name, money);
+                borrower.replaceOwed(x, iou);
+            } else {
+                borrower.replaceOwed(x, null);
+                Iou iou = new Iou(x.name, -money);
+                borrower.addOwe(iou);
+            }
+        }, () -> borrower.addOwe(new Iou(lenderName, amount)));
+
+        return marshal(lender, borrower);
+    }
+
     static class UserRepository {
 
         private final List<User> repository;
@@ -118,12 +144,6 @@ class RestApi {
 
         private Optional<User> findUser(String name) {
             return repository.stream().filter(u -> u.name().equals(name)).findFirst();
-        }
-
-        private void saveAll(User... users) {
-            for (User user : users) {
-                saveUser(user);
-            }
         }
 
         private void saveUser(User toSave) {

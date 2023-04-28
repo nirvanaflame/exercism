@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 import java.util.List;
-
-import static java.util.Collections.unmodifiableList;
+import java.util.Optional;
 
 /**
  * POJO representing a User in the database.
@@ -25,14 +24,39 @@ public class User {
      * IOUs this user owes to other users.
      */
     public List<Iou> owes() {
-        return unmodifiableList(owes);
+        return owes;
     }
 
     /**
      * IOUs other users owe to this user.
      */
     public List<Iou> owedBy() {
-        return unmodifiableList(owedBy);
+        return owedBy;
+    }
+
+    public Optional<Iou> findOwe(String name) {
+        return owes.stream().filter(x -> x.name.equals(name)).findFirst();
+    }
+
+    public void replaceOwe(Iou oldIou, Iou newIou) {
+        owes.remove(oldIou);
+        if (newIou != null) owes.add(newIou);
+    }
+
+    public void addOwe(Iou iou) {
+        owes.add(iou);
+    }
+
+    public void addOwed(Iou iou) {
+        owedBy.add(iou);
+    }
+
+    public Optional<Iou> findOwed(String name) {
+        return owedBy.stream().filter(x -> x.name.equals(name)).findFirst();
+    }
+    public void replaceOwed(Iou name, Iou newIou) {
+        owedBy.remove(name);
+        if (newIou != null) owedBy.add(newIou);
     }
 
     @Override
