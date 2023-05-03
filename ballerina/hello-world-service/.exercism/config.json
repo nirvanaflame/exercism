@@ -1,0 +1,24 @@
+{
+  "authors": [],
+  "contributors": [
+    "vordimous",
+    "kasun04",
+    "ldclakmal",
+    "Manuri"
+  ],
+  "files": {
+    "solution": [
+      "hello_world_service.bal"
+    ],
+    "test": [
+      "tests/hello_world_service_test.bal"
+    ],
+    "example": [
+      ".meta/reference/hello_world_service.bal"
+    ]
+  },
+  "icon": "rest-api",
+  "blurb": "The classical introductory exercise. Just create an HTTP service to say \"Hello, World!\".",
+  "source": "This is an exercise to introduce users to the Ballerina Service interface",
+  "source_url": "https://ballerina.io/learn/by-example/hello-world-service/"
+}
