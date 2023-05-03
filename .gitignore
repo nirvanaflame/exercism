@@ -8,3 +8,5 @@
 **/obj/Debug/
 **/out
 **/target
+.vscode
+**/.vscode
