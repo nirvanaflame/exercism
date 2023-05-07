@@ -1,3 +1,4 @@
+// explanations: https://exercism.org/tracks/kotlin/exercises/roman-numerals/approaches/fold-repeat
 object RomanNumerals {
     fun value(n: Int) = mapping()
         .fold(Pair(StringBuilder(), n)) { (output, runnyNum), (value, numeral) ->
