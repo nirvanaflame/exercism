@@ -1,21 +1,29 @@
 object RomanNumerals {
-
-    private val ARABIC_NUMERALS = intArrayOf(1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1)
-
-    private val ROMAN_NUMERALS = arrayOf("M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I")
-
-
-    fun value(n: Int): String {
-        var num = n;
-        val sb = StringBuilder()
-        ARABIC_NUMERALS.forEachIndexed { i, x ->
-            run {
-                while (num >= x) {
-                    sb.append(ROMAN_NUMERALS[i])
-                    num -= x
-                }
+    fun value(n: Int) = mapping()
+        .fold(Pair(StringBuilder(), n)) { (output, runnyNum), (value, numeral) ->
+            when {
+                runnyNum >= value ->
+                    output.append(numeral.repeat(runnyNum / value)) to
+                            runnyNum % value
+                else -> output to runnyNum
             }
         }
-        return sb.toString()
-    }
+        .first
+        .toString()
+
+    private fun mapping() = listOf(
+        1000 to "M",
+        900 to "CM",
+        500 to "D",
+        400 to "CD",
+        100 to "C",
+        90 to "XC",
+        50 to "L",
+        40 to "XL",
+        10 to "X",
+        9 to "IX",
+        5 to "V",
+        4 to "IV",
+        1 to "I"
+    )
 }
