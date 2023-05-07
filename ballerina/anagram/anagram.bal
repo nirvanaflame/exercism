@@ -1,15 +1,12 @@
 public function anagrams(string word, string[] candidates) returns string[] {
-    string[] anagrams = [];
+    return from string candidate in candidates
+        where word.toLowerAscii() != candidate.toLowerAscii() 
+            && char_order(word) == char_order(candidate)
+        select candidate;
+}
 
-    int[] enc = word.toLowerAscii().toCodePointInts().sort();
-    foreach string candidate in candidates {
-        if !word.equalsIgnoreCaseAscii(candidate) {
-            int[] c = candidate.toLowerAscii().toCodePointInts().sort();
-            if enc.toString() == c.toString() {
-                anagrams.push(candidate);
-            }
-        }
-    }
-
-    return anagrams;
+function char_order(string word) returns string[] {
+    return from string c in word.toLowerAscii() 
+        order by c
+        select c;
 }
