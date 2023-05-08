@@ -38,12 +38,11 @@ public function proteins(string strand) returns string[]|error {
 
         string[] codes = chars.slice(i, i + 3);
         string code = string:'join("", ...codes);
-        if translations.hasKey(code) {
-            string full = translations[code] ?: "";
-            if full == "STOP" {
-                break;
-            }
-            result.push(full);
+        string? tra = translations[code];
+
+        if tra != null {
+            if tra == "STOP" { break; }
+            result.push(tra);
         } else {
             return error("Invalid codon");
         }
