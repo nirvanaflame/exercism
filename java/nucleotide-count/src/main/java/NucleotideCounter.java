@@ -1,9 +1,5 @@
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
-
-import static java.util.stream.Collectors.groupingBy;
-import static java.util.stream.Collectors.summingInt;
 
 public class NucleotideCounter {
 
@@ -24,15 +20,9 @@ public class NucleotideCounter {
             put('G', 0);
             put('T', 0);
         }};
-
         nucleotide.chars()
                 .mapToObj(code -> (char) code)
-                .peek(System.out::println)
-                .collect(groupingBy(
-                        Function.identity(),
-                        HashMap::new,
-                        summingInt(value -> map.merge(value, 1, Integer::sum))
-                ));
+                .forEach(x -> map.merge(x, 1, Integer::sum));
         return map;
     }
 }
