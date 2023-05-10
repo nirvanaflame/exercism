@@ -1,55 +1,57 @@
 import ballerina/http;
 
-// Client endpoint to communicate with Airline reservation service
 final http:Client airlineReservationEP = check new ("http://localhost:9091/airline");
-
-// Client endpoint to communicate with Hotel reservation service
 final http:Client hotelReservationEP = check new ("http://localhost:9092/hotel");
-
-// Client endpoint to communicate with Car rental service
 final http:Client carRentalEP = check new ("http://localhost:9093/car");
 
-// Travel agency service to arrange a complete tour for a user
 service /travel on new http:Listener(9090) {
 
-    // Define a resource method to arrange a tour, that accepts `POST` requests in the path `/arrangeTour`.
-    // This resource should accept a value of the type `TourArrangement` that already defined below.
     resource function post arrangeTour(@http:Payload TourArrangement payload) returns http:Response|error {
-
-        // Extract Travel infomation from the travel reservation request
-        // Create the payload skeleton to be sent to the Airline service
-        // Enrich the required fields with the information retrieved from the original travel reservation request.
-        Reservation reservation = {
-            name: payload.name,
-            arrivalDate: payload.arrivalDate,
-            departureDate: payload.departureDate,
-            preference: payload.preference.airline
-        };
-        // Airline Reservation request shold be in this format : {"name":"", "arrivalDate":"", "departureDate":"", "preference":""}
-        ServiceResponse airlineResponse = check airlineReservationEP->post(path = "/reserve", message = reservation, targetType = ServiceResponse);
-        // If the airline reservation fails, send the response to the client with the follwing payload:
-        // {"message": "Failed to reserve airline! Provide a valid 'preference' for 'airline' and try again"}
-        // In case of a failure, status code of the response should be 400 Bad Request.
+        var airlineReservation = createReservation(payload, payload.preference.airline);
+        ServiceResponse airlineResponse = check airlineReservationEP->post(path = "/reserve", message = airlineReservation, targetType = ServiceResponse);
         if airlineResponse.status is FAILED {
-            http:Response response = new;
-            response.statusCode = 400;
-            response.setPayload({"message": "Failed to reserve airline! Provide a valid 'preference' for 'airline' and try again"}.toJsonString());
-            return response;
+            return createErrorResponse("Failed to reserve airline! Provide a valid 'preference' for 'airline' and try again");
         }
 
-        // Follow the same steps for 'Hotel' and 'Car Rental' services.
-        // Both hotel and car rental service requests are in the format of : {"name":"", "arrivalDate":"",
-        // "departureDate":"", "preference":""}
-        // If the hotel reservation fails, respond with the following payload:
-        // {"message": "Failed to reserve hotel! Provide a valid 'preference' for 'accommodation' and try again"}
-        // If the car rental reservation fails, response with the following payload:
-        // {"message": "Failed to rent car! Provide a valid 'preference' for 'car' and try again"}
+        var carReservation = createReservation(payload, payload.preference.car);
+        ServiceResponse carResponse = check carRentalEP->post(path = "/rent", message = carReservation, targetType = ServiceResponse);
+        if carResponse.status is FAILED {
+            return createErrorResponse("Failed to rent car! Provide a valid 'preference' for 'car' and try again");
+        }
 
-        // If all three services response positive status, send a successful message to the user
-        // with the payload {"Message":"Congratulations! Your journey is ready!!"}
-        // The status code of the response should be 201 Created
-        return error("general");
+        var hotelReservation = createReservation(payload, payload.preference.accomodation);
+        ServiceResponse hotelResponse = check hotelReservationEP->post(path = "/reserve", message = hotelReservation, targetType = ServiceResponse);
+        if hotelResponse.status is FAILED {
+            return createErrorResponse("Failed to reserve hotel! Provide a valid 'preference' for 'accommodation' and try again");
+        }
+
+        return createSuccesfulResponse();
     }
+}
+
+function createReservation(TourArrangement payload, string preference) returns Reservation {
+    return {
+        name: payload.name,
+        arrivalDate: payload.arrivalDate,
+        departureDate: payload.departureDate,
+        preference: preference
+    };
+}
+
+function createErrorResponse(string errorMessage) returns http:Response {
+    http:Response response = new;
+    response.statusCode = 400;
+    response.setHeader(http:CONTENT_TYPE, "application/json");
+    response.setPayload({"message": errorMessage}.toJsonString());
+    return response;
+}
+
+function createSuccesfulResponse() returns http:Response {
+    http:Response response = new;
+    response.statusCode = 201;
+    response.setHeader(http:CONTENT_TYPE, "application/json");
+    response.setPayload({"message":"Congratulations! Your journey is ready!!"}.toString());
+    return response;
 }
 
 # The payload type received from the tour arrangement service.
