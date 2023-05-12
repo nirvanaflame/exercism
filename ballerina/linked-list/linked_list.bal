@@ -31,17 +31,15 @@ public function newLinkedList() returns LinkedList {
 # + list - the linked list
 # + value - integer value to add
 public function push(LinkedList list, int value) {
-    var node = new Node(list.tail, value = value);
-    if list.tail == null {
+    var node = new Node(value = value);
+    var t = list.tail;
+    if t == null {
         list.head = node;
         list.tail = node;
     } else {
-        var t = list.tail;
-        if t != null {
-            t.next = node;
-        }
-        list.tail = node;
+        t.next = node;
         node.prev = t;
+        list.tail = node;
     }
 
     list.length += 1;
@@ -52,7 +50,17 @@ public function push(LinkedList list, int value) {
 # + list - the linked list
 # + value - integer value to add
 public function unshift(LinkedList list, int value) {
-
+    var node = new Node(value = value);
+    var h = list.head;
+    if h == null {
+        list.head = node;
+        list.tail = node;
+    } else {
+        h.prev = node;
+        node.next = h;
+        list.head = node;
+    }
+    list.length += 1;
 }
 
 # Remove a value from the tail of a linked list
@@ -68,8 +76,11 @@ public function pop(LinkedList list) returns int? {
         list.head = null;
     }
     list.tail = node.prev;
+    var t = list.tail;
+    if t != null {
+        t.next = null;
+    }
     list.length -= 1;
-    node.prev = null;
     return node.value;
  
 }
@@ -79,20 +90,20 @@ public function pop(LinkedList list) returns int? {
 # + list - the linked list
 # + return - the value, or nil if the list is empty
 public function shift(LinkedList list) returns int? {
-    var local = list;
     var node = list.head;
-    if node != null {
-        local.head = node.next;
-        return node.value;
-    } else {
-        // int val = local.value;
-        var next = local.tail;
-        if next != null {
-            next.prev = null;
-            // local = next;
-        }
-        return 0;
+    if node == null {
+        return null;
     }
+    if node.next == null {
+        list.tail = null;
+    }
+    list.head = node.next;
+    var h = list.head;
+    if h != null {
+        h.prev = null;
+    }
+    list.length -= 1;
+    return node.value;
 }
 
 # Count the number of values in a list
@@ -100,11 +111,7 @@ public function shift(LinkedList list) returns int? {
 # + list - the linked list
 # + return - the number of values, or zero for an empty list
 public function count(LinkedList list) returns int {
-    int count = 0;
-    while list.tail != null {
-        count += 1;
-    }
-    return count;
+    return list.length;
 }
 
 # Delete the given value from the linked list
@@ -112,16 +119,24 @@ public function count(LinkedList list) returns int {
 # + list - the linked list
 # + value - integer value to delete
 public function delete(LinkedList list, int value) {
-    while list.tail != null {
-        // if list.value == value {
-        //     var prev = list.head;
-        //     var next = list.tail;
-        //     if prev != null {
-        //         prev.next = next;
-        //     }
-        //     if next != null {
-        //         next.prev = prev;
-        //     }
-        // }
+    var node = list.head;
+    while node != null {
+        if node.value == value {
+            var prev = node.prev;
+            var next = node.next;
+            if prev != null {
+                prev.next = next;
+            } else {
+                list.head = next;
+            }
+            if next != null {
+                next.prev = prev;
+            } else {
+                list.tail = prev;
+            }
+            list.length -= 1;
+            return;
+        }
+        node = node.next;
     }
 }
