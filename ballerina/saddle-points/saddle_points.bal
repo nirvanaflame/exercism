@@ -42,7 +42,3 @@ function getColMin(int[][] matrix, int colId) returns int {
 
     return min[0]; 
 }
-
-public function main() {
-    var sad = getRowMax([]);
-}
