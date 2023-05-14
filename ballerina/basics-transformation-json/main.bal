@@ -1,25 +1,21 @@
 import ballerina/io;
 
 function processFuelRecords(string inputFilePath, string outputFilePath) returns error? {
-    json input = check io:fileReadJson(inputFilePath);
+    json inputJson = check io:fileReadJson(inputFilePath);
+    FillUpEntry[] entries = checkpanic inputJson.cloneWithType();
 
-
-    table<FillUpDb> db = jsonToTable(input);
-    var sad = from var {employeeId: id, gasFillUpCount: gas, totalFuelCost: cost, totalGallons: gallons, totalMilesAccrued: miles} in db
+    table<FillUpDb> db = processRecords(entries);
+    var response = from var {employeeId: id, gasFillUpCount: gas, totalFuelCost: cost, totalGallons: gallons, totalMilesAccrued: miles} in db
         order by id
         select {employeeId: id, gasFillUpCount: gas, totalFuelCost: cost, totalGallons: gallons, totalMilesAccrued: miles};
 
-    error? res = io:fileWriteJson(outputFilePath, sad.toJson());
-    
-    return res;
+    _ = check io:fileWriteJson(outputFilePath, response.toJson());
 }
 
-function jsonToTable(json jsonString) returns table<FillUpDb> {
+function processRecords(FillUpEntry[] entries) returns table<FillUpDb> {
     table<FillUpDb> key(employeeId) db = table [];
 
-    foreach json j in <json[]> jsonString {
-        FillUpEntry entry = checkpanic j.cloneWithType(FillUpEntry);
-
+    foreach FillUpEntry entry in entries {
         int id = entry.employeeId;
         if db.hasKey(id) {
             var rec = db.get(id);
@@ -73,10 +69,3 @@ type FillUpDb record {|
     decimal totalGallons;
     int totalMilesAccrued;
 |};
-
-public function main() {
-    var sad = processFuelRecords(
-        "/home/nf/IdeaProjects/exercism/ballerina/basics-transformation-json/tests/resources/example01_input.json",
-         "/home/nf/IdeaProjects/exercism/ballerina/basics-transformation-json/tests/resources/test_output.json");
-    io:print(sad);
-}
