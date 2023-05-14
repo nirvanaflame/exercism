@@ -1,0 +1,21 @@
+exit
+load leap.test.u
+test
+exit
+load leap.test.u
+test> tests = runAll [leap.test]
+test
+add
+load leap.test.u
+add leap.u
+load leap.test.u
+ui
+exit
+q
+leap
+myTerm = List.map(x -> x*10)[1,2,3,4,5,6]
+?
+ll
+ls
+cd quickstart
+ls
