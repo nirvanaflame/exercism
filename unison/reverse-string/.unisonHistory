@@ -1,0 +1,40 @@
+load reverseString.test.u
+load reverseString.test.u
+load reverseString.test.u
+load reverseString.test.u
+add reverseString.u
+exit
+load reverseString.test.u
+load reverseString.test.u
+load reverseString.test.u
+load reverseString.test.u
+add reverseString.u
+load reverseString.test.u
+exit
+pull unison.public lib.public
+list base Text
+list base text
+ls 1 1
+2
+ls 1
+ls 1.1
+ls 1
+ls
+ls 1
+ls 1 1
+ls /base
+ls base
+ls base/Text
+ls
+ls 1
+ls Text
+ls Text 38
+ls 1 38
+ls 1
+ls
+load base
+help
+Text.toCharList "text"
+ls
+ui
+ls
