@@ -14,5 +14,4 @@ class PrimeCalculator {
                 .peek(primes::add)
                 .toArray()[nth - 2];
     }
-
 }
