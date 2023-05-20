@@ -1,5 +1,3 @@
-import static java.util.Arrays.stream;
-
 public class Robot {
 
     GridPosition position;
@@ -38,11 +36,11 @@ public class Robot {
     }
 
     public void simulate(String move) {
-        stream(move.split("")).forEach(action -> {
+        move.chars().forEach(action -> {
             switch (action) {
-                case "R" -> turnRight();
-                case "L" -> turnLeft();
-                case "A" -> advance();
+                case 'R' -> turnRight();
+                case 'L' -> turnLeft();
+                case 'A' -> advance();
             }
         });
     }
