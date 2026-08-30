@@ -1,0 +1,29 @@
+public class GameMaster {
+
+    public String describe(Character c) {
+        return "You're a level %d %s with %s hit points.".formatted(
+            c.getLevel(), c.getCharacterClass(), c.getHitPoints()
+        );
+    }
+
+    public String describe(Destination d) {
+        return "You've arrived at %s, which has %d inhabitants.".formatted(
+            d.getName(), d.getInhabitants()
+        );
+    }
+
+    public String describe(TravelMethod tm) {
+        return switch(tm) {
+            case HORSEBACK -> "You're traveling to your destination on horseback.";
+            default -> "You're traveling to your destination by walking.";
+        };
+    }
+    
+    public String describe(Character c, Destination d, TravelMethod tm) {
+        return "%s %s %s".formatted(describe(c), describe(tm), describe(d));
+    }
+
+    public String describe(Character c, Destination d) {
+        return describe(c, d, TravelMethod.WALKING);
+    }
+}
