@@ -1,0 +1,6 @@
+reverseString.reverse : Text -> Text
+reverseString.reverse text =
+    if text == "" then ""
+    else
+        arr = toCharList text
+        fromCharList (List.reverse arr)
