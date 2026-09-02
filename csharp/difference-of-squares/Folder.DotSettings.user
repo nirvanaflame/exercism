@@ -1,0 +1,7 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/CodeInspection/ExcludedFiles/FilesAndFoldersToSkip2/=7020124F_002D9FFC_002D4AC3_002D8F3D_002DAAB8E0240759_002Ff_003ARange_002Ecs_002Fl_003AC_0021_003FUsers_003Fnf_003FAppData_003FRoaming_003FJetBrains_003FRider2026_002E2_003Fresharper_002Dhost_003FSourcesCache_003F36b5151d8b20b97ce4d68ff12cc15eb23cd5e58474e6282da7a2fa67363512_003FRange_002Ecs/@EntryIndexedValue">ForceIncluded</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=f6eef225_002Dd487_002D465a_002D9678_002D9da9587b8698/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="DifferenceOfSquaresTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::4DF5F913-8ECD-EA32-833F-A3DDCD377E57::net10.0::DifferenceOfSquaresTests&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
