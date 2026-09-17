@@ -1,0 +1,16 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=1f3447b9_002D30dd_002D4234_002D8ed5_002Dafa852170dcc/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="InternationalCallingConnoisseurTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::96AC5DF1-E543-A081-7D63-1226DCBA5E6B::net10.0::InternationalCallingConnoisseurTests&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=4c03f89e_002Dfbbc_002D449f_002Dbc4a_002D0cd9bd9e9e7d/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="InternationalCallingConnoisseurTests #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::96AC5DF1-E543-A081-7D63-1226DCBA5E6B::net10.0::InternationalCallingConnoisseurTests&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=c6c7f7c6_002D7b12_002D4b13_002D80a8_002D1250cfdc972c/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="Existing_dictionary_count_is_3" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::96AC5DF1-E543-A081-7D63-1226DCBA5E6B::net10.0::InternationalCallingConnoisseurTests&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>

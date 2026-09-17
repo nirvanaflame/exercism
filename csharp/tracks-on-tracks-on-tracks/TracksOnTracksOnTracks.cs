@@ -8,6 +8,11 @@ public static class Languages
 
     public static List<string> AddLanguage(List<string> languages, string language)
     {
+        var result = new string("string".Reverse().ToArray());
+        
+            "string".Length
+       
+        
         languages.Add(language);
         return languages;
     }
