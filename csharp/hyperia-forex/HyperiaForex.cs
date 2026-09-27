@@ -11,25 +11,23 @@ public struct CurrencyAmount
 
     public static bool operator ==(CurrencyAmount a, CurrencyAmount b) => DoOrThrow(a, b, () => a.amount == b.amount);
 
-
     public static bool operator !=(CurrencyAmount a, CurrencyAmount b) => DoOrThrow(a, b, () => a.amount != b.amount);
-
 
     public static bool operator >(CurrencyAmount a, CurrencyAmount b) => DoOrThrow(a, b, () => a.amount > b.amount);
 
     public static bool operator <(CurrencyAmount a, CurrencyAmount b) => DoOrThrow(a, b, () => a.amount < b.amount);
 
     public static CurrencyAmount operator +(CurrencyAmount a, CurrencyAmount b) => 
-        DoOrThrow(a, b, () => a with { amount = a.amount + b.amount });
+        DoOrThrow(a, b, () => new CurrencyAmount(a.amount + b.amount, a.currency));
 
     public static CurrencyAmount operator -(CurrencyAmount a, CurrencyAmount b) =>
-        DoOrThrow(a, b, () => a with { amount = a.amount - b.amount });
+        DoOrThrow(a, b, () => new CurrencyAmount(a.amount - b.amount, a.currency));
 
     public static CurrencyAmount operator *(CurrencyAmount a, CurrencyAmount b) =>
-        DoOrThrow(a, b, () => a with { amount = a.amount * b.amount });
+        DoOrThrow(a, b, () => new CurrencyAmount(a.amount * b.amount, a.currency));
     
     public static CurrencyAmount operator /(CurrencyAmount a, CurrencyAmount b) =>
-        DoOrThrow(a, b, () => a with { amount = a.amount / b.amount });
+        DoOrThrow(a, b, () => new CurrencyAmount(a.amount / b.amount, a.currency));
 
     public static implicit operator double(CurrencyAmount a) => (double)a.amount;
 
