@@ -1,0 +1,31 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=431aa43a_002D7460_002D4cfb_002Dbca4_002D5174d35e5d5a/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" IsActive="True" Name="HyperiaForexTests #5" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::EDCC5F87-9098-F73C-AE2F-23DAAC164F3D::net10.0::HyperiaForexTests&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=5a0f91cd_002D15da_002D4f8d_002Db5ae_002Dcd97d798b23c/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="HyperiaForexTests #4" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::EDCC5F87-9098-F73C-AE2F-23DAAC164F3D::net10.0::HyperiaForexTests&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=5b324f92_002D6172_002D4267_002D8fba_002D21cdba5f60fd/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="HyperiaForexTests" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::EDCC5F87-9098-F73C-AE2F-23DAAC164F3D::net10.0::HyperiaForexTests&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=6a058f1e_002D0f53_002D4c1b_002Dab50_002D80f095262717/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="HyperiaForexTests #6" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::EDCC5F87-9098-F73C-AE2F-23DAAC164F3D::net10.0::HyperiaForexTests&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=ad03b62d_002Da8ee_002D4523_002D8f6f_002D13c686030328/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="HyperiaForexTests #2" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::EDCC5F87-9098-F73C-AE2F-23DAAC164F3D::net10.0::HyperiaForexTests&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String>
+	<s:String x:Key="/Default/Environment/UnitTesting/UnitTestSessionStore/Sessions/=bdc9eb98_002D2c73_002D4335_002D9674_002Da747df1e729a/@EntryIndexedValue">&lt;SessionState ContinuousTestingMode="0" Name="HyperiaForexTests #3" xmlns="urn:schemas-jetbrains-com:jetbrains-ut-session"&gt;&#xD;
+  &lt;TestAncestor&gt;&#xD;
+    &lt;TestId&gt;xUnit::EDCC5F87-9098-F73C-AE2F-23DAAC164F3D::net10.0::HyperiaForexTests&lt;/TestId&gt;&#xD;
+  &lt;/TestAncestor&gt;&#xD;
+&lt;/SessionState&gt;</s:String></wpf:ResourceDictionary>
