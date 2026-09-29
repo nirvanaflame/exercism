@@ -1,0 +1,54 @@
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+
+public class Graph {
+
+    private final Map<String, Node> nodes;
+    private final Map<String, Edge> edges;
+    private final Map<String, String> attributes;
+
+    public Graph() {
+        this.nodes = new HashMap<>();
+        this.edges = new HashMap<>();
+        this.attributes = new HashMap<>();
+    }
+
+    public Graph(Map<String, String> attributes) {
+        this.attributes = Map.copyOf(attributes);
+        this.nodes = new HashMap<>();
+        this.edges = new HashMap<>();
+    }
+
+    public Collection<Node> getNodes() {
+        return nodes.values();
+    }
+
+    public Collection<Edge> getEdges() {
+        return this.edges.values();
+    }
+
+    public Graph node(String name) {
+        nodes.put(name, new Node(name));
+        return this;
+    }
+
+    public Graph node(String name, Map<String, String> attributes) {
+        nodes.put(name, new Node(name, attributes));
+        return this;
+    }
+
+    public Graph edge(String start, String end) {
+        edges.put(start, new Edge(start, end));
+        return this;
+    }
+
+    public Graph edge(String start, String end, Map<String, String> attributes) {
+        edges.put(start, new Edge(start, end, attributes));
+        return this;
+    }
+
+    public Map<String, String> getAttributes() {
+        return attributes;
+    }
+}
