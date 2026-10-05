@@ -1,9 +1,5 @@
-import java.util.ArrayDeque;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Stream;
 
 class RelativeDistance {
 
@@ -36,7 +32,22 @@ class RelativeDistance {
             }
         }
 
+
+
         return -1;
+    }
+
+
+    public Object[] rotate(Object[] data, int n) {
+        int shift = data.length % n;
+
+        Object[] result = new Object[data.length];
+        if (n > 0) {
+            int startIndex = data.length - 1 - shift;
+
+        }
+
+
     }
 
     /**
